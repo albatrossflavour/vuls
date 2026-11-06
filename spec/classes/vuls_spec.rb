@@ -96,7 +96,7 @@ describe 'vuls' do
           expect(unit).not_to include('ExecCondition')
           expect(unit).to match(%r{ExecStart=-/usr/local/bin/vuls scan .*\nExecStart=/usr/local/bin/vuls report .*-ignore-unfixed})
           expect(unit).to include('ExecStart=/usr/local/sbin/vuls-windows-collect --config=/etc/vuls/windows.json')
-          expect(unit).to match(%r{ExecStart=/usr/local/sbin/vuls-mark-complete /var/lib/vuls/results /var/lib/vuls/last-complete-run\n})
+          expect(unit).to match(%r{ExecStart=/usr/local/sbin/vuls-mark-complete /var/lib/vuls/results /var/lib/vuls/last-complete-run /etc/vuls/config.toml /etc/vuls/windows.json\n})
           expect(unit).to include('MemoryMax=8G')
           expect(unit).to include('-mtime +3 ')
         end

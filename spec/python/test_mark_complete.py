@@ -50,3 +50,22 @@ def test_with_no_runs_fails_and_keeps_the_previous_record(tmp_path):
     assert proc.returncode != 0
     assert "no run" in proc.stderr
     assert marker.read_text() == "/var/lib/vuls/results/previous\n"
+
+
+def test_keeps_a_copy_of_the_configuration_the_run_used(tmp_path):
+    results = tmp_path / "results"
+    run_dir = results / "2026-11-08T22-00-00+1100"
+    run_dir.mkdir(parents=True)
+    config = tmp_path / "config.toml"
+    config.write_text('[servers."a.example.com"]\nhost = "192.0.2.1"\n')
+    windows = tmp_path / "windows.json"
+    windows.write_text('[{"certname": "w.example.com"}]')
+    marker = tmp_path / "last-complete-run"
+
+    proc = subprocess.run([str(SCRIPT), str(results), str(marker), str(config), str(windows)],
+                          capture_output=True, text=True)
+
+    assert proc.returncode == 0, proc.stderr
+    assert (run_dir / ".scanned" / "config.toml").read_text() == config.read_text()
+    assert (run_dir / ".scanned" / "windows.json").read_text() == windows.read_text()
+    assert marker.read_text() == f"{run_dir}\n"

@@ -88,7 +88,7 @@ A Windows node without that fact yet is left out, rather than sent with a partia
 
 ## Reading results from another tool
 
-Each run writes a directory under `/var/lib/vuls/results`. A scan that runs long can still be writing its directory when something else looks, so read the run named in `/var/lib/vuls/last-complete-run` instead of the newest directory. That file is only written once a run has finished every step, and it holds the run directory's full path.
+Each run writes a directory under `/var/lib/vuls/results`. A scan that runs long can still be writing its directory when something else looks, so read the run named in `/var/lib/vuls/last-complete-run` instead of the newest directory. That file is only written once a run has finished every step, and it holds the run directory's full path. The run's `.scanned` directory holds the `config.toml` and `windows.json` it scanned with, so a reader can tell a host the run never attempted from one it couldn't reach, even after today's configuration has moved on.
 
 Results older than `keep_days`, 3 by default, are removed after each run.
 

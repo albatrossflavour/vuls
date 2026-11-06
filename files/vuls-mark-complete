@@ -1,7 +1,7 @@
 #!/bin/sh
 # Managed by Puppet (vuls) - do not edit by hand.
 #
-# Usage: vuls-mark-complete RESULTS_DIR FILE
+# Usage: vuls-mark-complete RESULTS_DIR FILE [CONFIG...]
 #
 # Records, in FILE, the run directory a scan has just finished: the newest
 # directory under RESULTS_DIR, which is the one the scan and report wrote. It
@@ -9,6 +9,10 @@
 # that got through every step. Anything reading Vuls results on its own
 # schedule should read the run FILE names rather than the newest directory,
 # which may be a run still being written.
+#
+# Each CONFIG is copied into the run's .scanned directory first, so a reader
+# that comes along days later can tell what the run was asked to scan, rather
+# than comparing an old run against today's configuration.
 #
 # Symlinks are skipped, as Vuls keeps none there that name a separate run.
 # Written to a temporary name and renamed, so a reader never sees half a path.
@@ -20,6 +24,12 @@ newest=$(find "$results" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' | so
 if [ -z "$newest" ]; then
   echo "vuls-mark-complete: no run under $results" >&2
   exit 1
+fi
+
+shift 2
+if [ "$#" -gt 0 ]; then
+  mkdir -p "$newest/.scanned"
+  cp "$@" "$newest/.scanned/"
 fi
 
 printf '%s\n' "$newest" > "$file.tmp"

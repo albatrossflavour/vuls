@@ -23,7 +23,8 @@ class vuls::service {
   # every CVE Vuls reports.
   #
   # The last step records the run as complete, so it only names a run that got
-  # through every step before it.
+  # through every step before it, and keeps a copy of the configuration that run
+  # used in its .scanned directory.
   #
   # The timer is declared either way, so the service exists to run by hand.
   systemd::timer { 'vuls-scan.timer':
@@ -56,7 +57,7 @@ class vuls::service {
       ${condition}ExecStart=-/usr/local/bin/vuls scan -config=${config} -results-dir=${var}/results -log-dir=${var}/log
       ExecStart=/usr/local/bin/vuls report -config=${config} -results-dir=${var}/results -log-dir=${var}/log -format-json -to-localfile -ignore-unfixed -no-progress
       ExecStart=/usr/local/sbin/vuls-windows-collect --config=${etc}/windows.json --vuls-config=${config} --results-dir=${var}/results
-      ExecStart=/usr/local/sbin/vuls-mark-complete ${var}/results ${var}/last-complete-run
+      ExecStart=/usr/local/sbin/vuls-mark-complete ${var}/results ${var}/last-complete-run ${config} ${etc}/windows.json
       ExecStartPost=/usr/bin/find ${var}/results -mindepth 1 -maxdepth 1 -type d -mtime +${vuls::keep_days} -exec rm -rf {} +
       | EOT
   }
