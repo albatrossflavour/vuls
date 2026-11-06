@@ -1,0 +1,26 @@
+#!/bin/sh
+# Managed by Puppet (vuls) - do not edit by hand.
+#
+# Usage: vuls-mark-complete RESULTS_DIR FILE
+#
+# Records, in FILE, the run directory a scan has just finished: the newest
+# directory under RESULTS_DIR, which is the one the scan and report wrote. It
+# runs as the last step of vuls-scan.service, so FILE only ever names a run
+# that got through every step. Anything reading Vuls results on its own
+# schedule should read the run FILE names rather than the newest directory,
+# which may be a run still being written.
+#
+# Symlinks are skipped, as Vuls keeps none there that name a separate run.
+# Written to a temporary name and renamed, so a reader never sees half a path.
+set -eu
+results=$1
+file=$2
+
+newest=$(find "$results" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d ' ' -f 2-)
+if [ -z "$newest" ]; then
+  echo "vuls-mark-complete: no run under $results" >&2
+  exit 1
+fi
+
+printf '%s\n' "$newest" > "$file.tmp"
+mv "$file.tmp" "$file"

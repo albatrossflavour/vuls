@@ -1,0 +1,4 @@
+---
+lookup_options:
+  vuls::scan_ssh_private_key:
+    convert_to: "Sensitive"
