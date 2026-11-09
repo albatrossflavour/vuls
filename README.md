@@ -44,7 +44,7 @@ vuls::scan_time: "Sun *-*-* 22:00:00"
 
 ## Requirements
 
-- Ubuntu 24.04. Nothing else is tested yet
+- Ubuntu 24.04, where it runs in production. A bare install on AlmaLinux 9 and 10 and Ubuntu 26.04 was tested on 2026-11-09, without running a scan
 - Puppet 8 with PuppetDB. Without PuppetDB, Vuls still installs, with nothing to scan, and the run warns
 - About 20 GB of disk for the database and results, and memory for `memory_max`, 8 GB by default
 
@@ -124,7 +124,7 @@ sudo userdel vuls
 
 ## Limitations
 
-- Ubuntu 24.04 only, for the scanner
+- Ubuntu 24.04, 26.04, and AlmaLinux 9 and 10 for the scanner
 - Linux packages only (`scanModules = ["ospkg"]`), in fast or offline mode
 - Each node is scanned at its primary address, from the `networking.ip` fact
 - The module has been run for real on one estate. It has no Litmus acceptance tests
