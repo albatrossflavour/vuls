@@ -50,7 +50,7 @@ vuls::scan_time: "Sun *-*-* 22:00:00"
 
 ## Credentials
 
-Vuls logs in to Linux nodes over SSH as `vuls::scan_login`, `vuls` by default. Make a key without a passphrase, since the module has no passphrase setting:
+Vuls logs in to Linux nodes over SSH as `vuls::scan_login`, `vulsscan` by default. That isn't `vuls`, the scanner's own service account, so the scanner can be scanned too. Make a key without a passphrase, since the module has no passphrase setting:
 
 ```sh
 ssh-keygen -t rsa -b 4096 -N '' -C vuls-scan -f vuls_scan

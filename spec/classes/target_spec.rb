@@ -22,12 +22,12 @@ describe 'vuls::target' do
       let(:params) { { 'ssh_public_key' => pub } }
 
       it { is_expected.to compile.with_all_deps }
-      it { is_expected.to contain_user('vuls').with(ensure: 'present', managehome: true, shell: '/bin/bash') }
+      it { is_expected.to contain_user('vulsscan').with(ensure: 'present', managehome: true, shell: '/bin/bash') }
 
       it 'adds the key under <login>-vuls' do
-        is_expected.to contain_ssh_authorized_key('vuls-vuls')
-          .with(ensure: 'present', user: 'vuls', type: 'ssh-rsa', key: 'AAAAB3NzaC1yc2EAAAADAQABAAABAQC7')
-        is_expected.to contain_user('vuls').that_comes_before('Ssh_authorized_key[vuls-vuls]')
+        is_expected.to contain_ssh_authorized_key('vulsscan-vuls')
+          .with(ensure: 'present', user: 'vulsscan', type: 'ssh-rsa', key: 'AAAAB3NzaC1yc2EAAAADAQABAAABAQC7')
+        is_expected.to contain_user('vulsscan').that_comes_before('Ssh_authorized_key[vulsscan-vuls]')
       end
     end
 

@@ -20,7 +20,8 @@
 # @param sha256
 #   SHA-256 of that release's linux_amd64 tarball, from its checksums.txt.
 # @param scan_login
-#   The account Vuls logs in to Linux nodes as.
+#   The account Vuls logs in to Linux nodes as. Not `vuls`, the scanner's own
+#   service account, so `vuls::target` can go on the scanner too.
 # @param scan_ssh_private_key
 #   The private key it logs in with. Without one, Linux nodes can't be scanned.
 # @param exclude
@@ -52,7 +53,7 @@
 class vuls (
   String[1]                      $version               = '0.40.1',
   String[64, 64]                 $sha256                = '31fc4660f3266916f8d4fb30c2c4a5477a912f0178573853f4ce19dd2a1f91f4',
-  String[1]                      $scan_login            = 'vuls',
+  String[1]                      $scan_login            = 'vulsscan',
   Optional[Sensitive[String[1]]] $scan_ssh_private_key  = undef,
   Array[String[1]]               $exclude               = [],
   Array[String[1]]               $exclude_patterns      = [],

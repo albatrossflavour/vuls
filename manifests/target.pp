@@ -14,7 +14,7 @@
 # @param ssh_public_key
 #   The whole line from the `.pub` file, such as `ssh-rsa AAAA... vuls-scan`.
 # @param login
-#   The account name. Defaults to `vuls::scan_login`, then `vuls`.
+#   The account name. Defaults to `vuls::scan_login`, then `vulsscan`.
 # @param manage_user
 #   Whether to create the account. Set false for an account that already
 #   exists or is managed elsewhere.
@@ -36,7 +36,7 @@ class vuls::target (
   Optional[String[1]] $ssh_key_name = undef,
 ) {
   # The scanner's key, so one Hiera value serves the scanner and the nodes.
-  $_login = $login.lest || { lookup('vuls::scan_login', String[1], 'first', 'vuls') }
+  $_login = $login.lest || { lookup('vuls::scan_login', String[1], 'first', 'vulsscan') }
 
   if $facts['os']['family'] == 'windows' {
     # Nothing to do: Vuls never logs in to Windows.

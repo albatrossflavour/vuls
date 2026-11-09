@@ -41,6 +41,16 @@ describe 'vuls' do
       let(:toml) { catalogue.resource('file', '/etc/vuls/config.toml')[:content] }
       let(:unit) { catalogue.resource('systemd::timer', 'vuls-scan.timer')[:service_content] }
 
+      context 'on a scanner that is also a scan target, with the defaults' do
+        let(:pre_condition) do
+          super() + "class { 'vuls::target': ssh_public_key => 'ssh-rsa AAAAB3NzaC1yc2E vuls-scan' }\n"
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_user('vuls').with_system(true) }
+        it { is_expected.to contain_user('vulsscan').with_managehome(true) }
+      end
+
       context 'with a bare include' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_user('vuls').with(ensure: 'present', system: true, shell: '/sbin/nologin') }
@@ -65,7 +75,7 @@ describe 'vuls' do
         end
 
         it 'logs in as vuls' do
-          expect(toml).to include('user = "vuls"')
+          expect(toml).to include('user = "vulsscan"')
           is_expected.to contain_file('/etc/vuls/ssh_config').with_content(%r{User vuls})
         end
 
