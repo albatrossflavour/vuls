@@ -31,14 +31,14 @@ On a clean agent, with no Hiera data:
 
 ## Getting started
 
-Follow [the install guide](docs/guide/README.md). It goes from an empty node to a finished scan, with a check at the end of each step, and on to Soundwave if you want the findings in VR.
+Follow [the install guide](https://github.com/albatrossflavour/vuls/blob/main/docs/guide/README.md). It goes from an empty node to a finished scan, with a check at the end of each step, and on to Soundwave if you want the findings in VR.
 
 ## Reference
 
-- Schedules, credentials, Windows, leaving nodes out, sharing a node with Greenbone, and reading the results from another tool: [configuration](docs/configuration.md)
-- Removing it: [operating](docs/operating.md)
-- Every class and parameter: [REFERENCE.md](REFERENCE.md)
-- What changed in each release: [CHANGELOG.md](CHANGELOG.md)
+- Schedules, credentials, Windows, leaving nodes out, sharing a node with Greenbone, and reading the results from another tool: [configuration](https://github.com/albatrossflavour/vuls/blob/main/docs/configuration.md)
+- Removing it: [operating](https://github.com/albatrossflavour/vuls/blob/main/docs/operating.md)
+- Every class and parameter: [REFERENCE.md](https://github.com/albatrossflavour/vuls/blob/main/REFERENCE.md)
+- What changed in each release: [CHANGELOG.md](https://github.com/albatrossflavour/vuls/blob/main/CHANGELOG.md)
 
 ## Limitations
 

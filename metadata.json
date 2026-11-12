@@ -1,6 +1,6 @@
 {
   "name": "albatrossflavour-vuls",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "albatrossflavour",
   "summary": "Vuls, the agentless vulnerability scanner, with its scan list built from PuppetDB",
   "license": "Apache-2.0",
