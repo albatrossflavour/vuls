@@ -20,7 +20,7 @@ sudo systemctl start vuls-scan.service
 
 It returns once the scan has finished, which on the first run includes the database download. To scan on a schedule, see [Scans are off by default](../configuration.md#scans-are-off-by-default).
 
-If Greenbone runs on the same node, keep the two from scanning at once. See [Keeping out of another scanner's way](../configuration.md#keeping-out-of-another-scanners-way). With the openvas module that's:
+If Greenbone runs on the same node, keep the two from scanning at once. See [Keeping out of another scanner's way](../configuration.md#keeping-out-of-another-scanners-way). With [the openvas module](https://github.com/albatrossflavour/openvas) that's:
 
 ```yaml
 vuls::scan_condition: "/usr/local/sbin/greenbone-reconcile idle"

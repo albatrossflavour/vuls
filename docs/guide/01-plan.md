@@ -11,7 +11,7 @@ Vuls logs in to every Linux node over SSH and downloads a database of about 10 G
 
 ## Do it
 
-Pick a node that meets the [requirements](../../README.md#requirements): Ubuntu 24.04 or 26.04 or AlmaLinux 9 or 10, about 20 GB of disk, and the memory for `vuls::memory_max`, 8 GB by default. If you'll send both Vuls's and Greenbone's findings to Puppet Enterprise, it has to be the Greenbone scanner, because Soundwave reads both on one node and PE takes one Soundwave.
+Pick a node that meets the [requirements](../../README.md#requirements): Ubuntu 24.04 or 26.04 or AlmaLinux 9 or 10, about 20 GB of disk, and the memory for `vuls::memory_max`, 8 GB by default. If you'll send both Vuls's and Greenbone's findings to Puppet Enterprise, it has to be the [Greenbone](https://github.com/albatrossflavour/openvas/blob/main/docs/guide/README.md) scanner, because [Soundwave](https://github.com/albatrossflavour/soundwave) reads both on one node and PE takes one Soundwave.
 
 Check the network from that node:
 

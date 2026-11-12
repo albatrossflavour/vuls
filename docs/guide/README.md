@@ -6,12 +6,12 @@ The steps link to [the module's reference pages](../../README.md#reference) for 
 
 ## Which steps you need
 
-Vuls works on its own, and nothing here needs Puppet Enterprise until step 5. Unlike Greenbone, Vuls can't scan a Linux node without logging in, so step 3 isn't optional.
+Vuls works on its own, and nothing here needs Puppet Enterprise until step 5. Unlike [Greenbone](https://github.com/albatrossflavour/openvas), Vuls can't scan a Linux node without logging in, so step 3 isn't optional.
 
 | You want | Steps |
 |---|---|
 | Vuls scanning Linux and Windows nodes | 1 to 4 |
-| The findings in PE Vulnerability Remediation | All five, then the Soundwave guide |
+| The findings in PE Vulnerability Remediation | All five, then [the Soundwave guide](https://github.com/albatrossflavour/soundwave/blob/main/docs/guide/README.md) |
 | Vuls beside Greenbone on the same node | All of them, and see [Keeping out of another scanner's way](../configuration.md#keeping-out-of-another-scanners-way) in step 4 |
 
 ## The steps
