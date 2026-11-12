@@ -1,10 +1,10 @@
 # vuls
 
-[Vuls](https://github.com/future-architect/vuls), the agentless vulnerability scanner, with what it scans built from PuppetDB.
+[Vuls](https://github.com/future-architect/vuls), the agentless vulnerability scanner, checking the installed packages on every node in your Puppet estate. The module builds Vuls's scan list from PuppetDB, so a new node is scanned without anyone editing Vuls. Linux nodes are scanned over SSH with an account that needs no sudo, and Windows nodes are assessed from what PuppetDB knows about them, without logging in.
 
-To install it, follow [the install guide](docs/guide/README.md), which takes you from an empty node to a finished scan, step by step, and on to Puppet Enterprise if you want the findings there. This README is the reference the guide links to.
+It works on its own, writing a JSON result per node. To get the findings into Puppet Enterprise Vulnerability Remediation, add [Soundwave](https://github.com/albatrossflavour/soundwave).
 
-## Two classes, on two kinds of node
+## What it installs
 
 | Class | Goes on | Does |
 |---|---|---|
@@ -15,7 +15,7 @@ They are separate because Puppet only changes the node it is running on. The sca
 
 `vuls::target` is safe to include everywhere before the key is in Hiera: it warns and changes nothing until it is. On Windows it does nothing, because Vuls never logs in there.
 
-## What `include vuls` does
+### What `include vuls` does
 
 On a clean agent, with no Hiera data:
 
@@ -23,26 +23,7 @@ On a clean agent, with no Hiera data:
 - Downloads a pinned Vuls release, checks its SHA-256, and installs it as `/usr/local/bin/vuls`
 - Writes a configuration listing every active Linux node in PuppetDB by certname, with host keys from their ssh facts
 - Writes the Windows nodes PuppetDB knows, for the Windows step
-- Installs the scan as `vuls-scan.service`
-
-## Scans are off by default
-
-Nothing is scanned until you decide it should be, because a scan logs in to every node and Vuls downloads its database, about 10 GB, on a run when its copy is more than an hour old.
-
-Run it by hand:
-
-```sh
-sudo systemctl start vuls-scan.service
-```
-
-Or on a schedule:
-
-```yaml
-vuls::scan_schedule_enabled: true
-vuls::scan_time: "Sun *-*-* 22:00:00"
-```
-
-`scan_time` is a systemd `OnCalendar` value, daily at 02:15 by default.
+- Installs the scan as `vuls-scan.service`, and schedules nothing. Nothing is scanned until you run it or turn the schedule on, because a scan logs in to every node
 
 ## Requirements
 
@@ -50,79 +31,16 @@ vuls::scan_time: "Sun *-*-* 22:00:00"
 - Puppet 8 with PuppetDB. Without PuppetDB, Vuls still installs, with nothing to scan, and the run warns
 - About 20 GB of disk for the database and results, and memory for `memory_max`, 8 GB by default
 
-## Credentials
+## Getting started
 
-Vuls logs in to Linux nodes over SSH as `vuls::scan_login`, `vulsscan` by default. That isn't `vuls`, the scanner's own service account, so the scanner can be scanned too. Make a key without a passphrase, since the module has no passphrase setting:
+Follow [the install guide](docs/guide/README.md). It goes from an empty node to a finished scan one step at a time, with a check at the end of each, and on to Soundwave if you want the findings in PE.
 
-```sh
-ssh-keygen -t rsa -b 4096 -N '' -C vuls-scan -f vuls_scan
-eyaml encrypt -l vuls::scan_ssh_private_key -f vuls_scan
-```
+## Reference
 
-Then, at a level both the scanner and the scanned nodes read:
-
-```yaml
-vuls::scan_ssh_private_key: ENC[PKCS7,...]                       # the scanner logs in with this
-vuls::target::ssh_public_key: "ssh-rsa AAAAB3Nza... vuls-scan"   # the nodes accept this
-```
-
-and on the scanned nodes:
-
-```puppet
-include vuls::target
-```
-
-The account needs no sudo. RedHat-family nodes are scanned in Vuls's offline mode for that reason: fast mode asks the node for its updatable packages with `sudo repoquery`, and offline skips that question. CVE detection compares installed versions against the advisories either way.
-
-### Choosing the account
-
-`vuls::target` creates an account named `vuls::scan_login`, so setting that once changes both. To use an account that already exists, or that something else manages, set `vuls::target::manage_user: false`, and the class only adds the key.
-
-### Sharing the account with another scanner
-
-The key is added as `<login>-vuls` by default, and `vuls::target::ssh_key_name` changes that. When another scanner logs in as the same account with the same key, give both the same key name: the key is declared once and appears once in `authorized_keys`. The same name with a different key fails the catalogue, naming the clash.
-
-## Windows
-
-Windows nodes are assessed without logging in. Vuls has no WinRM, and Windows nodes usually have no SSH, so the scan posts what PuppetDB knows about each one to a short-lived `vuls server` on the scanner. Two things PuppetDB doesn't carry, the update build revision and the installed hotfix list, come from the `vuls_windows` fact this module ships. Pluginsync puts it on every node, so Windows needs no class.
-
-A Windows node without that fact yet is left out, rather than sent with a partial version, because Vuls answers a wrong version with a confident zero.
-
-## Reading results from another tool
-
-Each run writes a directory under `/var/lib/vuls/results`. A scan that runs long can still be writing its directory when something else looks, so read the run named in `/var/lib/vuls/last-complete-run` instead of the newest directory. That file is only written once a run has finished every step, and it holds the run directory's full path. The run's `.scanned` directory holds the `config.toml` and `windows.json` it scanned with, so a reader can tell a host the run never attempted from one it couldn't reach, even after today's configuration has moved on.
-
-Results older than `keep_days`, 3 by default, are removed after each run.
-
-## Keeping out of another scanner's way
-
-`vuls::scan_condition` is a command run as root before each scan, and the scan is skipped when it exits non-zero:
-
-```yaml
-vuls::scan_condition: "/usr/local/sbin/some-scanner-check idle"
-```
-
-## Leaving nodes out
-
-```yaml
-vuls::exclude:
-  - db1.example.com
-vuls::exclude_patterns:
-  - '\.cloud\.example\.com$'
-```
-
-`exclude_patterns` are regular expressions matched against the certname, for whole networks the scanner can't reach. A node the scanner can't reach is otherwise still listed and comes back with nothing.
-
-## Removing it
-
-Removing the class leaves everything in place. To remove it by hand:
-
-```sh
-sudo systemctl disable --now vuls-scan.timer
-sudo rm -rf /etc/vuls /var/lib/vuls /opt/vuls /usr/local/bin/vuls /usr/local/sbin/vuls-windows-collect /usr/local/sbin/vuls-mark-complete
-sudo rm -f /etc/systemd/system/vuls-scan.timer /etc/systemd/system/vuls-scan.service
-sudo userdel vuls
-```
+- Schedules, credentials, Windows, leaving nodes out, sharing a node with Greenbone, and reading the results from another tool: [configuration](docs/configuration.md)
+- Removing it: [operating](docs/operating.md)
+- Every class and parameter: [REFERENCE.md](REFERENCE.md)
+- What changed in each release: [CHANGELOG.md](CHANGELOG.md)
 
 ## Limitations
 
@@ -140,8 +58,6 @@ uvx pytest spec/python
 ```
 
 `pdk test unit` fails below 100% resource coverage.
-
-See `REFERENCE.md` for every parameter.
 
 ## Licence
 

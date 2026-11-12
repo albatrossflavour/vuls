@@ -18,9 +18,9 @@ Run one by hand:
 sudo systemctl start vuls-scan.service
 ```
 
-It returns once the scan has finished, which on the first run includes the database download. To scan on a schedule, see [Scans are off by default](../../README.md#scans-are-off-by-default).
+It returns once the scan has finished, which on the first run includes the database download. To scan on a schedule, see [Scans are off by default](../configuration.md#scans-are-off-by-default).
 
-If Greenbone runs on the same node, keep the two from scanning at once. See [Keeping out of another scanner's way](../../README.md#keeping-out-of-another-scanners-way). With the openvas module that's:
+If Greenbone runs on the same node, keep the two from scanning at once. See [Keeping out of another scanner's way](../configuration.md#keeping-out-of-another-scanners-way). With the openvas module that's:
 
 ```yaml
 vuls::scan_condition: "/usr/local/sbin/greenbone-reconcile idle"
@@ -42,7 +42,7 @@ The first names today's run directory. The second has a line for every scanned L
 | `last-complete-run` doesn't exist or didn't move | The run failed part way | `sudo journalctl -u vuls-scan.service -o cat` |
 | The service was skipped | `vuls::scan_condition` exited non-zero, such as Greenbone scanning | Run it again later |
 | A node with errors | It couldn't be reached or logged in to | Go back to the configtest check in step 3 |
-| A Windows node is missing | It has no `vuls_windows` fact yet | Run the agent on it. See [Windows](../../README.md#windows) |
+| A Windows node is missing | It has no `vuls_windows` fact yet | Run the agent on it. See [Windows](../configuration.md#windows) |
 
 ## Next
 

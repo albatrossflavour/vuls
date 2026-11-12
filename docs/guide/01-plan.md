@@ -18,7 +18,7 @@ Check the network from that node:
 - Outbound HTTPS, to download the Vuls release from GitHub and its database
 - TCP 22 to every Linux node you want scanned, at its `networking.ip` fact
 
-Windows nodes need no route, because they're assessed from what PuppetDB knows. See [Windows](../../README.md#windows).
+Windows nodes need no route, because they're assessed from what PuppetDB knows. See [Windows](../configuration.md#windows).
 
 ## Done when
 
@@ -33,7 +33,7 @@ At least 8 GB of memory, 20 GB free under `/var`, and an agent run that complete
 
 ## If it fails
 
-A node the scanner can't reach is still listed and comes back with nothing. Leave whole networks out with `vuls::exclude_patterns`. See [Leaving nodes out](../../README.md#leaving-nodes-out).
+A node the scanner can't reach is still listed and comes back with nothing. Leave whole networks out with `vuls::exclude_patterns`. See [Leaving nodes out](../configuration.md#leaving-nodes-out).
 
 ## Next
 

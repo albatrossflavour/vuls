@@ -12,9 +12,9 @@ Vuls reads the installed packages on each Linux node over SSH, so without an acc
 
 ## Do it
 
-Follow [Credentials](../../README.md#credentials): make a key, put both halves in Hiera at a level the scanner and the scanned nodes read, and include `vuls::target` on the scanned nodes. Run the agent on the scanned nodes, then on the scanner.
+Follow [Credentials](../configuration.md#credentials): make a key, put both halves in Hiera at a level the scanner and the scanned nodes read, and include `vuls::target` on the scanned nodes. Run the agent on the scanned nodes, then on the scanner.
 
-The account needs no sudo. If another scanner already logs in as the same account, see [Sharing the account with another scanner](../../README.md#sharing-the-account-with-another-scanner).
+The account needs no sudo. If another scanner already logs in as the same account, see [Sharing the account with another scanner](../configuration.md#sharing-the-account-with-another-scanner).
 
 ## Done when
 

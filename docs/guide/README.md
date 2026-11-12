@@ -2,7 +2,7 @@
 
 This guide takes you from an empty node to Vuls scanning every node in PuppetDB, and optionally on to the findings showing up in Puppet Enterprise.
 
-The steps link to the [module README](../../README.md) for each setting's detail.
+The steps link to [the module's reference pages](../../README.md#reference) for each setting's detail.
 
 ## Which steps you need
 
@@ -12,7 +12,7 @@ Vuls works on its own, and nothing here needs Puppet Enterprise until step 5. Un
 |---|---|
 | Vuls scanning Linux and Windows nodes | 1 to 4 |
 | The findings in PE Vulnerability Remediation | All five, then the Soundwave guide |
-| Vuls beside Greenbone on the same node | All of them, and see [Keeping out of another scanner's way](../../README.md#keeping-out-of-another-scanners-way) in step 4 |
+| Vuls beside Greenbone on the same node | All of them, and see [Keeping out of another scanner's way](../configuration.md#keeping-out-of-another-scanners-way) in step 4 |
 
 ## The steps
 
