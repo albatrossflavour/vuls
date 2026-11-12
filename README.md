@@ -2,6 +2,8 @@
 
 [Vuls](https://github.com/future-architect/vuls), the agentless vulnerability scanner, with what it scans built from PuppetDB.
 
+To install it, follow [the install guide](docs/guide/README.md), which takes you from an empty node to a finished scan, step by step, and on to Puppet Enterprise if you want the findings there. This README is the reference the guide links to.
+
 ## Two classes, on two kinds of node
 
 | Class | Goes on | Does |
