@@ -1,8 +1,8 @@
 # vuls
 
-[Vuls](https://github.com/future-architect/vuls), the agentless vulnerability scanner, checking the installed packages on every node in your Puppet estate. The module builds Vuls's scan list from PuppetDB, so a new node is scanned without anyone editing Vuls. Linux nodes are scanned over SSH with an account that needs no sudo, and Windows nodes are assessed from what PuppetDB knows about them, without logging in.
+This module runs [Vuls](https://vuls.io/), the agentless vulnerability scanner, against every node in your Puppet estate, with the scan list kept in step with PuppetDB, so a new node is scanned without anyone editing Vuls. It checks installed packages against vendor advisories: Linux nodes over SSH, with an account that needs no sudo, and Windows nodes from what PuppetDB knows about them, without logging in.
 
-It works on its own, writing a JSON result per node. To get the findings into Puppet Enterprise Vulnerability Remediation, add [Soundwave](https://github.com/albatrossflavour/soundwave).
+It works on its own, writing a JSON result per node. [Soundwave](https://github.com/albatrossflavour/soundwave) pushes its findings, with any other scanner's, into [Vulnerability Remediation](https://help.puppet.com/pe/current/topics/advanced-patching-vulnerability-remediation.htm) in Puppet Enterprise Advanced, where PE shows which ones Puppet can patch.
 
 ## What it installs
 
@@ -11,9 +11,7 @@ It works on its own, writing a JSON result per node. To get the findings into Pu
 | `vuls` | the scanner | Installs Vuls, builds its scan list from PuppetDB, and runs the scan. Everything is a parameter on this class |
 | `vuls::target` | every Linux node you want scanned | Creates the account Vuls logs in as. Put it in a profile every node gets |
 
-They are separate because Puppet only changes the node it is running on. The scanner's catalogue can't create an account on another node, so each scanned node does that in its own.
-
-`vuls::target` is safe to include everywhere before the key is in Hiera: it warns and changes nothing until it is. On Windows it does nothing, because Vuls never logs in there.
+`vuls::target` is safe to include everywhere before the key is in Hiera, because until then it warns and changes nothing, and on Windows it does nothing.
 
 ### What `include vuls` does
 
@@ -27,13 +25,13 @@ On a clean agent, with no Hiera data:
 
 ## Requirements
 
-- Ubuntu 24.04, where it runs in production. A bare install on AlmaLinux 9 and 10 and Ubuntu 26.04 was tested on 2026-11-09, without running a scan
-- Puppet 8 with PuppetDB. Without PuppetDB, Vuls still installs, with nothing to scan, and the run warns
+- Ubuntu 24.04 or 26.04, or AlmaLinux 9 or 10
+- Puppet 8 with PuppetDB
 - About 20 GB of disk for the database and results, and memory for `memory_max`, 8 GB by default
 
 ## Getting started
 
-Follow [the install guide](docs/guide/README.md). It goes from an empty node to a finished scan one step at a time, with a check at the end of each, and on to Soundwave if you want the findings in PE.
+Follow [the install guide](docs/guide/README.md). It goes from an empty node to a finished scan, with a check at the end of each step, and on to Soundwave if you want the findings in VR.
 
 ## Reference
 
@@ -44,7 +42,6 @@ Follow [the install guide](docs/guide/README.md). It goes from an empty node to 
 
 ## Limitations
 
-- Ubuntu 24.04, 26.04, and AlmaLinux 9 and 10 for the scanner
 - Linux packages only (`scanModules = ["ospkg"]`), in fast or offline mode
 - Each node is scanned at its primary address, from the `networking.ip` fact
 - The module has been run for real on one estate. It has no Litmus acceptance tests
